@@ -125,3 +125,19 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 
 # укажем какую модель user использовать
 AUTH_USER_MODEL = 'users.User'
+
+# пользовательские роли
+ROLES = (
+    ('u', 'user'),
+    ('m', 'moderator'),
+    ('a', 'admin')
+)
+
+# настройки для отправки email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAL_HOST = 'smtp.gmail.com'
+EMAIL_USE_SSL = True
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = 'icancan1414@gmail.com'
+EMAIL_HOST_USER = 'icancan1414@gmail.com'
+EMAIL_HOST_PASSWORD = 'Ii31011990iI'
