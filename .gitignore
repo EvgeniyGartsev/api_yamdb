@@ -2,9 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+.sqlite3
 # C extensions
 *.so
+task.txt
 
 # Distribution / packaging
 .Python
