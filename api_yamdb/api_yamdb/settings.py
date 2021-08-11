@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django_filters',
     'api.apps.ApiConfig',
     'titles.apps.TitlesConfig',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -126,8 +127,23 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 
+
+# укажем какую модель user использовать
+AUTH_USER_MODEL = 'users.User'
+
+# пользовательские роли
+ROLES = (
+    ('u', 'user'),
+    ('m', 'moderator'),
+    ('a', 'admin')
+)
+
+# настройки для отправки email в консоль
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
+
