@@ -1,14 +1,14 @@
-from rest_framework import viewsets, filters
-from rest_framework.mixins import (ListModelMixin, CreateModelMixin,
-                                   DestroyModelMixin)
-from django_filters.rest_framework import DjangoFilterBackend
-
-from .models import Category, Genre, Title
 from api.filters import TitleFilter
 from api.pagination import Pagination
 from api.permissions import IsAdminOrReadOnly
 from api.serializers import (CategorySerializer, GenreSerializer,
-                             TitleSerializer, TitleCreateSerializer)
+                             TitleCreateSerializer, TitleSerializer)
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, viewsets
+from rest_framework.mixins import (CreateModelMixin, DestroyModelMixin,
+                                   ListModelMixin)
+
+from .models import Category, Genre, Title
 
 
 class CustomMixin(ListModelMixin, CreateModelMixin, DestroyModelMixin,
