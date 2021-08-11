@@ -20,3 +20,5 @@ requests==2.26.0
 sqlparse==0.4.1
 toml==0.10.2
 urllib3==1.26.6
+djangorestframework-simplejwt==4.7.2
+pyjwt==2.1.0
