@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 from titles.models import Category, Genre, Title
 from users.models import User
@@ -43,7 +44,30 @@ class TitleCreateSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    confirmation_code = serializers.CharField(max_length=200, required=False)
+    email = serializers.EmailField(
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'bio', 'role', 'confirmation_code')
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'bio', 'role')
+
+    def validate_username(self, value):
+        if value == 'me':
+            raise serializers.ValidationError('Имя пользователя "me" использовать нельзя!')
+        return value
+
+
+class TokenSerializer(serializers.Serializer):
+    '''Сериализатор для отправки confirmation code и username'''
+    username = serializers.CharField(max_length=200, required=True)
+    confirmation_code = serializers.CharField(max_length=200, required=True)
+
+    def validate_username(self, value):
+        if value == 'me':
+            raise serializers.ValidationError('Имя пользователя "me" использовать нельзя!')
+        if not User.objects.filter(username=value).exists():
+            raise serializers.ValidationError('Пользователя с таким именем нет!')
+        return value
+
+
+
