@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -133,9 +134,9 @@ AUTH_USER_MODEL = 'users.User'
 
 # пользовательские роли
 ROLES = (
-    ('u', 'user'),
-    ('m', 'moderator'),
-    ('a', 'admin')
+    ('user', 'u'),
+    ('moderator', 'm'),
+    ('admin', 'a')
 )
 
 # настройки для отправки email в консоль
@@ -145,5 +146,14 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ], 
 }
 
+SIMPLE_JWT = {
+    # Устанавливаем срок жизни токена
+   'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+   'AUTH_HEADER_TYPES': ('Bearer',),
+}

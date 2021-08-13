@@ -1,7 +1,10 @@
-from django.urls import include, path
+from django.urls import path, include
+from rest_framework import routers
 from rest_framework.routers import DefaultRouter
+
 from reviews.views import CommentViewSet, ReviewViewSet
 from titles.views import CategoryViewSet, GenreViewSet, TitleViewSet
+from users.views import APISignUp, APIToken, UserViewSet
 
 """Импорты для второго варианта вьюсетов комментариев и отзывов."""
 # from .views import CommentReadCreateViewSet, CommentPatchDeleteViewSet,\
@@ -28,7 +31,10 @@ router = DefaultRouter()
 router.register('categories', CategoryViewSet, basename='categories')
 router.register('genres', GenreViewSet, basename='genres')
 router.register('titles', TitleViewSet, basename='titles')
+router.register('users', UserViewSet, basename='users')
 
 urlpatterns = [
+    path('v1/auth/signup/', APISignUp.as_view()),
+    path('v1/auth/token/', APIToken.as_view()),
     path('v1/', include(router.urls)),
 ]
