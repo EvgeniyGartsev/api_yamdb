@@ -1,4 +1,3 @@
-from re import search
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
@@ -80,4 +79,3 @@ class UserViewSet(ModelViewSet):
         if self.request.user.role==ROLES[2][0]:
             return ForAdminSerializer
         return ForUserSerializer
-
