@@ -43,13 +43,30 @@ class TitleCreateSerializer(serializers.ModelSerializer):
         model = Title
 
 
-class UserSerializer(serializers.ModelSerializer):
+class ForUserSerializer(serializers.ModelSerializer):
+    '''Сериализатор для пользователей со статусом user'''
     email = serializers.EmailField(
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'bio', 'role')
+        fields = ('username', 'email')
+        read_only_fields = ('role', )
+
+    def validate_username(self, value):
+        if value == 'me':
+            raise serializers.ValidationError('Имя пользователя "me" использовать нельзя!')
+        return value
+
+
+class ForAdminSerializer(serializers.ModelSerializer):
+    '''Сериализатор для пользователей со статусом admin'''
+    email = serializers.EmailField(
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name', 'bio', 'role')
 
     def validate_username(self, value):
         if value == 'me':
@@ -58,7 +75,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class TokenSerializer(serializers.Serializer):
-    '''Сериализатор для отправки confirmation code и username'''
+    '''Сериализатор для получения токена'''
     username = serializers.CharField(max_length=200, required=True)
     confirmation_code = serializers.CharField(max_length=200, required=True)
 

@@ -15,10 +15,8 @@ class MyUserManager(UserManager):
             raise ValueError('The name "me" is forbidden to use')
         return super().create_user(username, email=email, password=password, **extra_fields)
 
-
-    # def create_superuser(self, username, email, password, **extra_fields):
-    #     # сохраняем суперпользователя с ролью admin
-    #     return super().create_user(username, email=email, password=password, role='admin', **extra_fields)
+    def create_superuser(self, username, email, password, role, **extra_fields):
+        return super().create_superuser(username, email, password, role=ROLES[2][0], **extra_fields)
 
 
 class User(AbstractUser):

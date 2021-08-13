@@ -1,15 +1,19 @@
+from re import search
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework import filters
 from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
 
-from api.serializers import UserSerializer, TokenSerializer
+from api.serializers import ForUserSerializer, ForAdminSerializer ,TokenSerializer
 from .models import User
+from api import permissions
+from api_yamdb.settings import ROLES
 
 
 def create_confirmation_code_and_send_email(username):
@@ -27,7 +31,7 @@ class APISignUp(APIView):
     '''Регистрация пользователя'''
     permission_classes = (AllowAny, )
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        serializer = ForUserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             # создаем confirmation code и отправляем на почту
@@ -44,6 +48,11 @@ class APIToken(APIView):
     def post(self, request):
         serializer = TokenSerializer(data=request.data)
         if serializer.is_valid():
+            # проверяем, существует ли пользователь
+            if not User.objects.filter(username=serializer.data['username']).exists():
+                Response(
+                    {'username': 'Пользователя с таким именем нет!'},
+                    status=status.HTTP_404_NOT_FOUND)
             user = get_object_or_404(User, username=serializer.data['username'])
             # проверяем confirmation code, если верный, выдаем токен
             if default_token_generator.check_token(user, serializer.data['confirmation_code']):
@@ -51,7 +60,7 @@ class APIToken(APIView):
                 return Response(
                     {'token': str(token)}, status=status.HTTP_200_OK)
             return Response({
-                'confirmation code': 'Incorrect confirmation code!'},
+                'confirmation code': 'Некорректный код подтверждения!'},
                 status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
@@ -60,4 +69,15 @@ class APIToken(APIView):
 class UserViewSet(ModelViewSet):
     '''Работа с пользователями'''
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    # поиск по эндпоинту users/{username}/
+    lookup_field = 'username'
+    permission_classes = (permissions.IsAdmin, )
+    filter_backends = (filters.SearchFilter, )
+    search_fields = ('username', )
+
+    def get_serializer_class(self, *args, **kwargs):
+        # используем разные сериализаторы для admin и user
+        if self.request.user.role==ROLES[2][0]:
+            return ForAdminSerializer
+        return ForUserSerializer
+
