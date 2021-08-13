@@ -4,7 +4,7 @@ from reviews.views import CommentViewSet, ReviewViewSet
 from titles.views import CategoryViewSet, GenreViewSet, TitleViewSet
 
 """Импорты для второго варианта вьюсетов комментариев и отзывов."""
-# from .views import CommentReadCreateViewSet, CommentPatchDeleteViewSet,\
+# from reviews.views import CommentReadCreateViewSet, CommentPatchDeleteViewSet,\
 # ReviewReadCreateViewSet, ReviewPatchDeleteViewSet
 
 

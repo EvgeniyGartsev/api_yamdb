@@ -2,6 +2,8 @@ from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 from reviews.models import Comment, Review
 from titles.models import Category, Genre, Title
+from rest_framework.validators import UniqueTogetherValidator
+
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -48,6 +50,19 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = '__all__'
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Review.objects.all(),
+                fields=('title', 'author'),
+                message='К произведению можно дать только один отзыв.'
+            )
+        ]
+
+    def validate(self, data):
+        if data['title'].author is data['author'] and (
+                self.context['request'].method == 'POST'):
+            raise serializers.ValidationError('Нельзя оставлять отзыв на своё произведение.'
+        return data
 
 
 class ReviewSerializer(serializers.ModelSerializer):
