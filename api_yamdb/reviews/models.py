@@ -1,5 +1,5 @@
 from django.db import models
-# импорт юзера
+
 from users.models import User
 
 from titles.models import Title
