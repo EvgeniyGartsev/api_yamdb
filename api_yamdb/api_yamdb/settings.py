@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_filters',
     'api.apps.ApiConfig',
     'titles.apps.TitlesConfig',
+    'reviews.apps.ReviewsConfig',
     'users.apps.UsersConfig',
 ]
 
