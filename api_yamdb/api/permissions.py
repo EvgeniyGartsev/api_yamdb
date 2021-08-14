@@ -13,6 +13,7 @@ class IsAdminOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         return (request.user.is_authenticated and
                 request.user.role == ROLES[2][0])
+                or (request.user.is_authenticated and request.user.role==ROLES[2][0]))
 
 
 class IsAdmin(permissions.BasePermission):

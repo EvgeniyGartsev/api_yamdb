@@ -15,6 +15,7 @@ from .models import User
 from api import permissions
 
 
+
 def create_confirmation_code_and_send_email(username):
     # создаем confirmation code и отправляем по email
     user = get_object_or_404(User, username=username)
