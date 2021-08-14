@@ -6,8 +6,8 @@ from api_yamdb.settings import ROLES
 
 
 class MyUserManager(UserManager):
-    '''Сохраняет пользователя только с email.
-    Нельзя использовать слово me для имени пользователя.'''
+    """Сохраняет пользователя только с email.
+    Нельзя использовать слово me для имени пользователя."""
     def create_user(self, username, email, password, **extra_fields):
         if not email:
             raise ValueError('Users must have an email address')
