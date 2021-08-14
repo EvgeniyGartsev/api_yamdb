@@ -9,19 +9,19 @@ from titles.views import CategoryViewSet, GenreViewSet, TitleViewSet
 
 
 router = DefaultRouter()
-router.register(r'reviews/(?P<review_id>\d+)/comments',
+router.register(r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments',
                 CommentViewSet, basename='comments')
-router.register(r'reviews', ReviewViewSet, basename='reviews')
+router.register(r'titles/(?P<title_id>\d+)/reviews', ReviewViewSet, basename='reviews')
 
 """Роутеры для второго варианта вьюсетов комментариев и отзывов."""
 
-# router.register(r'reviews/(?P<review_id>\d+)/comments',
+# router.register(r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments',
 #                 CommentReadCreateViewSet, basename='comments')
-# router.register(r'reviews/(?P<review_id>\d+)/comments',
+# router.register(r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments',
 #                 CommentPatchDeleteViewSet, basename='edit-comments')
-# router.register(r'reviews', ReviewReadCreateViewSet,
+# router.register(r'titles/(?P<title_id>\d+)/reviews', ReviewReadCreateViewSet,
 #                 basename='reviews')
-# router.register(r'reviews',  ReviewPatchDeleteViewSet,
+# router.register(r'titles/(?P<title_id>\d+)/reviews',  ReviewPatchDeleteViewSet,
 #                 basename='reviews-edit')
 
 router = DefaultRouter()

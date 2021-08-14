@@ -5,7 +5,6 @@ from titles.models import Category, Genre, Title
 from rest_framework.validators import UniqueTogetherValidator
 
 
-
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -50,19 +49,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = '__all__'
-        validators = [
-            UniqueTogetherValidator(
-                queryset=Review.objects.all(),
-                fields=('title', 'author'),
-                message='К произведению можно дать только один отзыв.'
-            )
-        ]
-
-    def validate(self, data):
-        if data['title'].author is data['author'] and (
-                self.context['request'].method == 'POST'):
-            raise serializers.ValidationError('Нельзя оставлять отзыв на своё произведение.'
-        return data
+        read_only_fields = ('author', 'review')
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -71,3 +58,17 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
+        read_only_fields = ('author', 'review')
+        # validators = [
+        #     UniqueTogetherValidator(
+        #         queryset=Review.objects.all(),
+        #         fields=('title', 'author'),
+        #         message='К произведению можно дать только один отзыв.'
+        #     )
+        # ]
+
+    def validate(self, data):
+        if data['title'].author is data['author'] and (
+                self.context['request'].method == 'POST'):
+            raise serializers.ValidationError('Нельзя оставлять отзыв на своё произведение.')
+        return data
