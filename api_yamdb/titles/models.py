@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth import get_user_model
+from django.db import models
 
 from .validators import year_validation
 
@@ -13,9 +13,9 @@ class Category(models.Model):
                             help_text='Укажите название для категории')
     slug = models.SlugField(max_length=50, unique=True,
                             verbose_name='URL категории',
-                            help_text='Задайте уникальный URL адрес категории. '
-                                      'Используйте только латиницу, цифры, '
-                                      'дефисы и знаки подчёркивания')
+                            help_text='Задайте уникальный URL адрес категории.'
+                                      ' Используйте только латиницу, цифры,'
+                                      ' дефисы и знаки подчёркивания')
 
     class Meta:
         ordering = ('name',)
