@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
 from rest_framework.validators import UniqueValidator
 from rest_framework.relations import SlugRelatedField
 
@@ -50,29 +50,36 @@ class ForUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
+
     class Meta:
         model = User
-        fields = ('username', 'email')
+        fields = (
+            'username', 'email', 'first_name', 'last_name', 'bio', 'role'
+        )
         read_only_fields = ('role', )
 
     def validate_username(self, value):
         if value == 'me':
-            raise serializers.ValidationError('Имя пользователя "me" использовать нельзя!')
+            raise serializers.ValidationError(
+                'Имя пользователя "me" использовать нельзя!'
+            )
         return value
 
 
 class ForAdminSerializer(serializers.ModelSerializer):
     '''Сериализатор для пользователей со статусом admin'''
     email = serializers.EmailField(
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
+        validators=[UniqueValidator(queryset=User.objects.all())])
+
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'bio', 'role')
+        fields = (
+            'username', 'email', 'first_name', 'last_name', 'bio', 'role')
 
     def validate_username(self, value):
         if value == 'me':
-            raise serializers.ValidationError('Имя пользователя "me" использовать нельзя!')
+            raise serializers.ValidationError(
+                'Имя пользователя "me" использовать нельзя!')
         return value
 
 
@@ -83,9 +90,10 @@ class TokenSerializer(serializers.Serializer):
 
     def validate_username(self, value):
         if value == 'me':
-            raise serializers.ValidationError('Имя пользователя "me" использовать нельзя!')
+            raise serializers.ValidationError(
+                'Имя пользователя "me" использовать нельзя!')
         if not User.objects.filter(username=value).exists():
-            raise serializers.ValidationError('Пользователя с таким именем нет!')
+            raise exceptions.NotFound('Пользователя с таким именем нет!')
         return value
 
 
