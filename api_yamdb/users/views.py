@@ -1,4 +1,3 @@
-from re import search
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
@@ -48,11 +47,6 @@ class APIToken(APIView):
     def post(self, request):
         serializer = TokenSerializer(data=request.data)
         if serializer.is_valid():
-            # проверяем, существует ли пользователь
-            if not User.objects.filter(username=serializer.data['username']).exists():
-                Response(
-                    {'username': 'Пользователя с таким именем нет!'},
-                    status=status.HTTP_404_NOT_FOUND)
             user = get_object_or_404(User, username=serializer.data['username'])
             # проверяем confirmation code, если верный, выдаем токен
             if default_token_generator.check_token(user, serializer.data['confirmation_code']):
@@ -63,21 +57,30 @@ class APIToken(APIView):
                 'confirmation code': 'Некорректный код подтверждения!'},
                 status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            
 
 
-class UserViewSet(ModelViewSet):
-    '''Работа с пользователями'''
+class APIUser(APIView):
+    '''Работа со своими данными для пользователя'''
+    def get(self, request, *args, **kwargs):
+        user = get_object_or_404(User, username=request.user.username)
+        serializer = ForUserSerializer(user, many=False)
+        return Response(serializer.data)
+
+    def patch(self, request, *args, **kwargs):
+        user = get_object_or_404(User, username=request.user.username)
+        serializer = ForUserSerializer(user, data=request.data, partial=True, many=False)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserViewSetForAdmin(ModelViewSet):
+    '''Работа с пользователями для администратора'''
     queryset = User.objects.all()
+    serializer_class = ForAdminSerializer
     # поиск по эндпоинту users/{username}/
     lookup_field = 'username'
     permission_classes = (permissions.IsAdmin, )
     filter_backends = (filters.SearchFilter, )
     search_fields = ('username', )
-
-    def get_serializer_class(self, *args, **kwargs):
-        # используем разные сериализаторы для admin и user
-        if self.request.user.role==ROLES[2][0]:
-            return ForAdminSerializer
-        return ForUserSerializer
-

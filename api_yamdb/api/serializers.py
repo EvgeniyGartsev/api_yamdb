@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
 from rest_framework.validators import UniqueValidator
 
 from titles.models import Category, Genre, Title
@@ -50,7 +50,7 @@ class ForUserSerializer(serializers.ModelSerializer):
     )
     class Meta:
         model = User
-        fields = ('username', 'email')
+        fields = ('username', 'email', 'first_name', 'last_name', 'bio', 'role')
         read_only_fields = ('role', )
 
     def validate_username(self, value):
@@ -83,8 +83,5 @@ class TokenSerializer(serializers.Serializer):
         if value == 'me':
             raise serializers.ValidationError('Имя пользователя "me" использовать нельзя!')
         if not User.objects.filter(username=value).exists():
-            raise serializers.ValidationError('Пользователя с таким именем нет!')
+            raise exceptions.NotFound('Пользователя с таким именем нет!')
         return value
-
-
-
