@@ -1,22 +1,34 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-# импорт юзера
+
+from titles.models import Title
 from users.models import User
 
-from .validators import score_validation
+
+class Review(models.Model):
+    title = models.ForeignKey(Title, on_delete=models.CASCADE,
+                              related_name='reviews')
+    text = models.TextField(verbose_name='Отзыв', help_text='Напишите отзыв')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    pub_date = models.DateTimeField(auto_now_add=True)
+    score = models.IntegerField(validators=[MinValueValidator(1),
+                                            MaxValueValidator(10)])
+
+    class Meta:
+        ordering = ('-pub_date',)
+        constraints = [
+            models.UniqueConstraint(fields=['title', 'author'],
+                                    name='unique review')
+        ]
 
 
 class Comment(models.Model):
+    review = models.ForeignKey(Review, on_delete=models.CASCADE,
+                               related_name='comments')
     text = models.TextField(verbose_name='Комментарий',
                             help_text='Введите текст комментария')
     pub_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-
-class Review(models.Model):
-    text = models.TextField(verbose_name='Отзыв', help_text='Напишите отзыв')
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
-    pub_date = models.DateTimeField(auto_now_add=True)
-    score = models.IntegerField(validators=[score_validation],
-                                help_text='Поставьте оценку произведению'
-                                          ' от 1 до 10')
+    class Meta:
+        ordering = ('-pub_date',)

@@ -1,7 +1,7 @@
-from django.db import models
-from django.contrib.auth.models import AbstractUser, UserManager
-
 # список ролей пользователя
+from django.contrib.auth.models import AbstractUser, UserManager
+from django.db import models
+
 from api_yamdb.settings import ROLES
 
 
@@ -13,10 +13,13 @@ class MyUserManager(UserManager):
             raise ValueError('Users must have an email address')
         if username == 'me':
             raise ValueError('The name "me" is forbidden to use')
-        return super().create_user(username, email=email, password=password, **extra_fields)
+        return super().create_user(username, email=email,
+                                   password=password, **extra_fields)
 
-    def create_superuser(self, username, email, password, role=ROLES[2][0], **extra_fields):
-        return super().create_superuser(username, email, password, role=ROLES[2][0], **extra_fields)
+    def create_superuser(self, username, email, password,
+                         role=ROLES[2][0], **extra_fields):
+        return super().create_superuser(username, email, password,
+                                        role=ROLES[2][0], **extra_fields)
 
 
 class User(AbstractUser):
@@ -25,4 +28,3 @@ class User(AbstractUser):
     objects = MyUserManager()
 
     REQUIRED_FIELDS = ('email', 'password')
-

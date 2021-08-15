@@ -1,6 +1,7 @@
-from rest_framework import serializers, exceptions
-from rest_framework.validators import UniqueValidator
+from django.db.models import Avg
+from rest_framework import exceptions, serializers
 from rest_framework.relations import SlugRelatedField
+from rest_framework.validators import UniqueValidator
 
 from reviews.models import Comment, Review
 from titles.models import Category, Genre, Title
@@ -22,11 +23,20 @@ class GenreSerializer(serializers.ModelSerializer):
 class TitleSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     genre = GenreSerializer(many=True, read_only=True)
+    rating = serializers.SerializerMethodField()
 
     class Meta:
         model = Title
-        fields = ('id', 'name', 'year', 'description', 'genre', 'category')
+        fields = ('id', 'name', 'year', 'description',
+                  'genre', 'category', 'rating')
         read_only_fields = ('id',)
+
+    def get_rating(self, obj):
+        try:
+            rating = obj.reviews.aggregate(Avg('score'))
+            return rating.get('score__avg')
+        except TypeError:
+            return None
 
 
 class TitleCreateSerializer(serializers.ModelSerializer):
@@ -41,12 +51,13 @@ class TitleCreateSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        fields = ('id', 'name', 'year', 'description', 'genre', 'category')
+        fields = ('id', 'name', 'year', 'description',
+                  'genre', 'category', 'rating')
         model = Title
 
 
 class ForUserSerializer(serializers.ModelSerializer):
-    '''Сериализатор для пользователей со статусом user'''
+    """Сериализатор для пользователей со статусом user."""
     email = serializers.EmailField(
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
@@ -67,7 +78,7 @@ class ForUserSerializer(serializers.ModelSerializer):
 
 
 class ForAdminSerializer(serializers.ModelSerializer):
-    '''Сериализатор для пользователей со статусом admin'''
+    """Сериализатор для пользователей со статусом admin."""
     email = serializers.EmailField(
         validators=[UniqueValidator(queryset=User.objects.all())])
 
@@ -84,7 +95,7 @@ class ForAdminSerializer(serializers.ModelSerializer):
 
 
 class TokenSerializer(serializers.Serializer):
-    '''Сериализатор для получения токена'''
+    """Сериализатор для получения токена."""
     username = serializers.CharField(max_length=200, required=True)
     confirmation_code = serializers.CharField(max_length=200, required=True)
 
@@ -102,7 +113,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ('id', 'text', 'author', 'pub_date')
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -110,4 +121,4 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = ('id', 'author', 'text', 'score', 'pub_date')

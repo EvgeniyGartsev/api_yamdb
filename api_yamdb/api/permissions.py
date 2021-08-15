@@ -18,15 +18,18 @@ class IsAdmin(permissions.BasePermission):
                 and request.user.role == ROLES[2][0])
 
 
-class IsAuthorOrStaffOrReadOnly(permissions.BasePermission):
-    """Author or staff can edit the review."""
-
+class IsAuthorOrAdministratorOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
         return (
             request.method in permissions.SAFE_METHODS
+            and request.user.is_anonymous
             or request.user.is_authenticated
-            or request.user.is_staff
         )
 
     def has_object_permission(self, request, view, obj):
-        return obj.author == request.user or request.user.is_staff
+        return (
+            request.method in permissions.SAFE_METHODS
+            or obj.author == request.user
+            or request.user.role == ROLES[2][0]
+            or request.user.role == ROLES[1][0]
+        )

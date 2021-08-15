@@ -1,32 +1,17 @@
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from reviews.views import CommentViewSet, ReviewViewSet
 from titles.views import CategoryViewSet, GenreViewSet, TitleViewSet
-from users.views import APISignUp, APIToken, UserViewSetForAdmin, APIUser
-
-"""Импорты для второго варианта вьюсетов комментариев и отзывов."""
-# from .views import CommentReadCreateViewSet, CommentPatchDeleteViewSet,\
-# ReviewReadCreateViewSet, ReviewPatchDeleteViewSet
-
+from users.views import APISignUp, APIToken, APIUser, UserViewSetForAdmin
 
 router = DefaultRouter()
-router.register(r'reviews/(?P<review_id>\d+)/comments',
-                CommentViewSet, basename='comments')
-router.register(r'reviews', ReviewViewSet, basename='reviews')
+router.register(r'titles/(?P<title_id>\d+)/reviews',
+                ReviewViewSet, basename='reviews')
+router.register(
+    r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments',
+    CommentViewSet, basename='comments')
 
-"""Роутеры для второго варианта вьюсетов комментариев и отзывов."""
-
-# router.register(r'reviews/(?P<review_id>\d+)/comments',
-#                 CommentReadCreateViewSet, basename='comments')
-# router.register(r'reviews/(?P<review_id>\d+)/comments',
-#                 CommentPatchDeleteViewSet, basename='edit-comments')
-# router.register(r'reviews', ReviewReadCreateViewSet,
-#                 basename='reviews')
-# router.register(r'reviews',  ReviewPatchDeleteViewSet,
-#                 basename='reviews-edit')
-
-router = DefaultRouter()
 router.register('categories', CategoryViewSet, basename='categories')
 router.register('genres', GenreViewSet, basename='genres')
 router.register('titles', TitleViewSet, basename='titles')
