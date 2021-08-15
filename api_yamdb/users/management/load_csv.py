@@ -1,13 +1,13 @@
 import csv
-import os
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
+
 from users.models import User
 
 
 class Command(BaseCommand):
-    '''Cоздаем команду для manage.py для добавления записи из csv файла в БД
-    принимает один аргумент - имя csv файла.'''
+    """Cоздаем команду для manage.py для добавления записи из csv файла в БД
+    принимает один аргумент - имя csv файла."""
 
     help = ('Add records from csv file in db - '
             'addrecords <name csv file>')
@@ -16,10 +16,13 @@ class Command(BaseCommand):
         parser.add_argument('csv_name', nargs='+')
 
     def handle(self, *args, **options):
-        path_file = f'd:\\Dev\\api_yamdb\\api_yamdb\\static\\data\\{options["csv_name"]}'
+        path_file = (
+            f'd:\\Dev\\api_yamdb\\api_yamdb\\static\\data\\'
+            f'{options["csv_name"]}')
         file = open(path_file)
         read_file = csv.reader(file)
         for record in read_file:
             User.objects.create(
-                username=record[1], email=record[2], role=record[3], bio=record[4], first_name=record[5], last_name=record[6])
+                username=record[1], email=record[2], role=record[3],
+                bio=record[4], first_name=record[5], last_name=record[6])
         file.close()

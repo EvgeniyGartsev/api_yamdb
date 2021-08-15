@@ -61,6 +61,7 @@ class Title(models.Model):
                                  related_name="titles", blank=True, null=True)
     genre = models.ManyToManyField(Genre, verbose_name='Жанр',
                                    related_name="titles", blank=True)
+    rating = models.IntegerField(null=True, default=None)
 
     class Meta:
         ordering = ('-year',)

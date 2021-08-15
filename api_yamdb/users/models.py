@@ -1,5 +1,6 @@
-from django.db import models
+# список ролей пользователя
 from django.contrib.auth.models import AbstractUser, UserManager
+from django.db import models
 
 # список ролей пользователя
 from api_yamdb.settings import (ROLES, MESSAGE_FOR_RESERVED_NAME,
