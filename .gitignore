@@ -6,7 +6,7 @@ __pycache__/
 # C extensions
 *.so
 task.txt
-api_yamdb/users/management/
+api_yamdb/static/data/
 
 # Distribution / packaging
 .Python
