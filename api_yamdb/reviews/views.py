@@ -1,7 +1,7 @@
 """Добавить миксины, если первый вариант вьюсетов не работает."""
 from api.permissions import IsAuthorOrStaffOrReadOnly
 from api.serializers import CommentSerializer, ReviewSerializer
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, mixins
 from rest_framework.response import Response
 from titles.models import Title
 
@@ -12,7 +12,7 @@ from reviews.models import Review
 
 class CommentViewSet(viewsets.ModelViewSet):
 
-    serializer_class = (CommentSerializer,)
+    serializer_class = CommentSerializer
 
     def get_queryset(self):
         review_id = self.kwargs.get('review_id')
@@ -33,7 +33,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 class ReviewViewSet(viewsets.ModelViewSet):
 
-    serializer_class = (ReviewSerializer,)
+    serializer_class = ReviewSerializer
 
     def get_queryset(self):
         title_id = self.kwargs.get('title_id')
@@ -54,7 +54,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 """Второй вариант вьюсетов."""
 
-# class CommentReadCreateViewSetCommentReadCreateViewSet(mixins.ListModelMixin,
+# class CommentReadCreateViewSet(mixins.ListModelMixin,
 #                                mixins.CreateModelMixin,
 #                                viewsets.GenericViewSet):
 #     serializer_class = (CommentSerializer,)
@@ -81,8 +81,8 @@ class ReviewViewSet(viewsets.ModelViewSet):
 #         review_id = self.kwargs.get('review_id')
 #         review = Review.objects.get(id=review_id)
 #         return review.comments
-
-
+#
+#
 # class ReviewReadCreateViewSet(mixins.ListModelMixin,
 #                               mixins.CreateModelMixin,
 #                               viewsets.GenericViewSet):
