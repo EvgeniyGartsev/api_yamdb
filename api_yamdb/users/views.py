@@ -15,7 +15,6 @@ from .models import User
 from api import permissions
 
 
-
 def create_confirmation_code_and_send_email(username):
     # создаем confirmation code и отправляем по email
     user = get_object_or_404(User, username=username)
@@ -28,7 +27,7 @@ def create_confirmation_code_and_send_email(username):
 
 
 class APISignUp(APIView):
-    '''Регистрация пользователя'''
+    """Регистрация пользователя"""
     permission_classes = (AllowAny, )
 
     def post(self, request):
@@ -46,7 +45,7 @@ class APISignUp(APIView):
 
 
 class APIToken(APIView):
-    '''Выдача токена'''
+    """Выдача токена"""
     permission_classes = (AllowAny, )
 
     def post(self, request):
@@ -67,7 +66,7 @@ class APIToken(APIView):
 
 
 class APIUser(APIView):
-    '''Работа со своими данными для пользователя'''
+    """Работа со своими данными для пользователя"""
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(User, username=request.user.username)
         serializer = ForUserSerializer(user, many=False)
@@ -84,7 +83,7 @@ class APIUser(APIView):
 
 
 class UserViewSetForAdmin(ModelViewSet):
-    '''Работа с пользователями для администратора'''
+    """Работа с пользователями для администратора"""
     queryset = User.objects.all()
     serializer_class = ForAdminSerializer
     # поиск по эндпоинту users/{username}/
