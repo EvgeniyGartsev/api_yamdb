@@ -140,6 +140,13 @@ ROLES = (
     ('admin', 'a')
 )
 
+# зарезервированное имя me, нельзя использовать
+# в качестве username
+RESERVED_NAME = 'me'
+# сообщения об ошибках
+MESSAGE_FOR_RESERVED_NAME = 'Имя пользователя "me" использовать нельзя!'
+MESSAGE_FOR_USER_NOT_FOUND = 'Пользователя с таким именем нет!'
+
 # настройки для отправки email в консоль
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
