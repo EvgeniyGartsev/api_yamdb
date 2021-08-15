@@ -7,6 +7,7 @@ __pycache__/
 *.so
 task.txt
 api_yamdb/static/data/
+api_yamdb/users/management
 
 # Distribution / packaging
 .Python
