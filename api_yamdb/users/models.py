@@ -2,23 +2,25 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 
 # список ролей пользователя
-from api_yamdb.settings import ROLES
+from api_yamdb.settings import (ROLES, MESSAGE_FOR_RESERVED_NAME,
+                                RESERVED_NAME)
 
 
 class MyUserManager(UserManager):
-    '''Сохраняет пользователя только с email.
-    Нельзя использовать слово me для имени пользователя.'''
+    """Сохраняет пользователя только с email.
+    Зарезервированное имя использовать нельзя."""
     def create_user(self, username, email, password, **extra_fields):
         if not email:
-            raise ValueError('Users must have an email address')
-        if username == 'me':
-            raise ValueError('The name "me" is forbidden to use')
-        return super().create_user(username, email=email, password=password, **extra_fields)
+            raise ValueError('Поле email обязательное')
+        if username == RESERVED_NAME:
+            raise ValueError(MESSAGE_FOR_RESERVED_NAME)
+        return super().create_user(
+            username, email=email, password=password, **extra_fields)
 
-
-    def create_superuser(self, username, email, password, **extra_fields):
-        # сохраняем суперпользователя с ролью admin
-        return super().create_user(username, email=email, password=password, role='admin', **extra_fields)
+    def create_superuser(
+            self, username, email, password, role=ROLES[2][0], **extra_fields):
+        return super().create_superuser(
+            username, email, password, role=ROLES[2][0], **extra_fields)
 
 
 class User(AbstractUser):
@@ -27,4 +29,3 @@ class User(AbstractUser):
     objects = MyUserManager()
 
     REQUIRED_FIELDS = ('email', 'password')
-

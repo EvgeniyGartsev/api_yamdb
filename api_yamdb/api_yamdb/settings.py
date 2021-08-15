@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'django_filters',
     'api.apps.ApiConfig',
     'titles.apps.TitlesConfig',
+    'reviews.apps.ReviewsConfig',
     'users.apps.UsersConfig',
     'reviews.apps.ReviewsConfig'
 ]
@@ -134,10 +136,17 @@ AUTH_USER_MODEL = 'users.User'
 
 # пользовательские роли
 ROLES = (
-    ('u', 'user'),
-    ('m', 'moderator'),
-    ('a', 'admin')
+    ('user', 'u'),
+    ('moderator', 'm'),
+    ('admin', 'a')
 )
+
+# зарезервированное имя me, нельзя использовать
+# в качестве username
+RESERVED_NAME = 'me'
+# сообщения об ошибках
+MESSAGE_FOR_RESERVED_NAME = 'Имя пользователя "me" использовать нельзя!'
+MESSAGE_FOR_USER_NOT_FOUND = 'Пользователя с таким именем нет!'
 
 # настройки для отправки email в консоль
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -146,5 +155,17 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
 }
 
+SIMPLE_JWT = {
+    # Устанавливаем срок жизни токена
+   'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+   'AUTH_HEADER_TYPES': ('Bearer',),
+}
