@@ -11,7 +11,6 @@ class IsAdminOrReadOnly(permissions.BasePermission):
                     request.user.role == ROLES[2][0]))
 
 
-
 class IsAdmin(permissions.BasePermission):
     """Доступ только администратору"""
     def has_permission(self, request, view):

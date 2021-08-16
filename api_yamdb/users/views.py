@@ -14,6 +14,7 @@ from api.serializers import (ForAdminSerializer, ForUserSerializer,
 
 from .models import User
 
+
 def create_confirmation_code_and_send_email(username):
     # создаем confirmation code и отправляем по email
     user = get_object_or_404(User, username=username)
