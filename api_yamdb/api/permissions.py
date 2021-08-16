@@ -1,21 +1,19 @@
 from rest_framework import permissions
 
-from api_yamdb.settings import ROLES
-
 
 class IsAdminOrReadOnly(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return (request.method in permissions.SAFE_METHODS
                 or (request.user.is_authenticated
-                    and request.user.role == ROLES[2][0]))
+                    and request.user.is_admin))
 
 
 class IsAdmin(permissions.BasePermission):
     """Доступ только администратору"""
     def has_permission(self, request, view):
         return (request.user.is_authenticated
-                and request.user.role == ROLES[2][0])
+                and request.user.is_admin)
 
 
 class IsAuthorOrAdministratorOrReadOnly(permissions.BasePermission):
@@ -30,6 +28,6 @@ class IsAuthorOrAdministratorOrReadOnly(permissions.BasePermission):
         return (
             request.method in permissions.SAFE_METHODS
             or obj.author == request.user
-            or request.user.role == ROLES[2][0]
-            or request.user.role == ROLES[1][0]
+            or request.user.is_admin
+            or request.user.is_moderator
         )
