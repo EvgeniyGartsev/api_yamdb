@@ -11,7 +11,7 @@ class Category(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     name = models.CharField(max_length=256, verbose_name='Название категории',
                             help_text='Укажите название для категории')
-    slug = models.SlugField(max_length=50, unique=True,
+    slug = models.SlugField(max_length=256, unique=True,
                             verbose_name='URL категории',
                             help_text='Задайте уникальный URL адрес категории.'
                                       ' Используйте только латиницу, цифры,'
