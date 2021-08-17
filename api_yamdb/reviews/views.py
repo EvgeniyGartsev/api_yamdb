@@ -28,7 +28,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def partial_update(self, request, *args, **kwargs):
         comment = get_object_or_404(Comment, id=self.kwargs.get('pk'),
-                                    title__id=self.kwargs.get('title_id'))
+                                    review__id=self.kwargs.get('review_id'))
         if self.request.user != comment.author:
             return Response(status=status.HTTP_403_FORBIDDEN)
         serializer = CommentSerializer(comment, data=request.data,
