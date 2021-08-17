@@ -12,9 +12,9 @@ class Review(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE,
                                db_index=True)
     pub_date = models.DateTimeField(auto_now_add=True)
-    score = models.IntegerField(validators=[MinValueValidator(1),
-                                            MaxValueValidator(10)],
-                                db_index=True)
+    score = models.PositiveSmallIntegerField(validators=[MinValueValidator(1),
+                                             MaxValueValidator(10)],
+                                             db_index=True)
 
     class Meta:
         ordering = ('-pub_date', 'score')
