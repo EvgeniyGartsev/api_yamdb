@@ -133,15 +133,7 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 # укажем какую модель user использовать
 AUTH_USER_MODEL = 'users.User'
 
-# пользовательские роли
-ROLES = (
-    ('user', 'u'),
-    ('moderator', 'm'),
-    ('admin', 'a')
-)
-
-# зарезервированное имя me, нельзя использовать
-# в качестве username
+# зарезервированное имя me
 RESERVED_NAME = 'me'
 # сообщения об ошибках
 MESSAGE_FOR_RESERVED_NAME = 'Имя пользователя "me" использовать нельзя!'
@@ -149,7 +141,7 @@ MESSAGE_FOR_USER_NOT_FOUND = 'Пользователя с таким имене�
 
 # настройки для отправки email в консоль
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
+DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -168,3 +160,6 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+# Constants
+PAGINATOR_PAGE_ITEMS_COUNT = 10
