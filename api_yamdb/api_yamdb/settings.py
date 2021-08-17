@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'titles.apps.TitlesConfig',
     'reviews.apps.ReviewsConfig',
     'users.apps.UsersConfig',
-    'reviews.apps.ReviewsConfig'
 ]
 
 MIDDLEWARE = [
@@ -151,6 +150,7 @@ MESSAGE_FOR_USER_NOT_FOUND = 'Пользователя с таким имене�
 # настройки для отправки email в консоль
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -165,7 +165,6 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    # Устанавливаем срок жизни токена
-   'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-   'AUTH_HEADER_TYPES': ('Bearer',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }

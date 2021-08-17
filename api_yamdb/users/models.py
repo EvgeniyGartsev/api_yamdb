@@ -1,5 +1,6 @@
-from django.db import models
+# список ролей пользователя
 from django.contrib.auth.models import AbstractUser, UserManager
+from django.db import models
 
 # список ролей пользователя
 from api_yamdb.settings import (ROLES, MESSAGE_FOR_RESERVED_NAME,
@@ -29,3 +30,8 @@ class User(AbstractUser):
     objects = MyUserManager()
 
     REQUIRED_FIELDS = ('email', 'password')
+
+    class Meta:
+        ordering = ('id',)
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
