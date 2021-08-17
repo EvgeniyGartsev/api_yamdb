@@ -168,3 +168,6 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+# Constants
+PAGINATOR_PAGE_ITEMS_COUNT = 10
